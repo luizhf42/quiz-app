@@ -1,15 +1,16 @@
 <template>
-  <h1>Oi</h1>
+  <main>
+    <Home />
+  </main>
 </template>
 
 <script>
+import "./App.scss";
+import Home from "./components/Home.vue";
 export default {
   name: "App",
+  components: {
+    Home,
+  },
 };
 </script>
-
-<style lang="scss" scoped>
-h1 {
-  font-size: 3rem;
-}
-</style>
