@@ -4,7 +4,7 @@
 
     <p>Select the category</p>
     <select @change="changeCategory">
-      <option :key="category.name" v-for="category in categories">
+      <option :key="category.name" :id="category.id" v-for="category in categories">
         {{ category.name }}
       </option>
     </select>
@@ -24,9 +24,9 @@
           @click="changeDifficulty($event)"
           name="difficulty"
           type="radio"
-          id="normal"
+          id="medium"
           checked
-        /><label class="button" for="normal" role="button">Normal</label>
+        /><label class="button" for="medium" role="button">Medium</label>
       </div>
       <div>
         <input
@@ -47,7 +47,7 @@
       v-model="questions"
     />
 
-    <button>Start!</button>
+    <button @click="passEvent()">Start!</button>
   </section>
 </template>
 
@@ -59,8 +59,8 @@ export default {
   data() {
     return {
       categories: [],
-      selectedCategory: "",
-      difficulty: "normal",
+      selectedCategoryId: 0,
+      difficulty: "medium",
       questions: 15,
     };
   },
@@ -69,7 +69,7 @@ export default {
     try {
       const { data } = await axios.get("api_category.php");
       this.categories = data.trivia_categories;
-      this.selectedCategory = data.trivia_categories[0].name;
+      this.selectedCategoryId = data.trivia_categories[0].id;
     } catch (error) {
       console.error(error);
     }
@@ -81,11 +81,18 @@ export default {
       const index = options.selectedIndex;
 
       if (index > -1) {
-        this.selectedCategory = options[index].innerText;
+        this.selectedCategoryId = options[index].id;
       }
     },
     changeDifficulty(event) {
       this.difficulty = event.target.id;
+    },
+    passEvent() {
+      this.$emit("startTheGame", {
+        difficulty: this.difficulty,
+        categoryId: this.selectedCategoryId,
+        questions: this.questions,
+      });
     },
   },
 };
@@ -157,7 +164,7 @@ export default {
   }
 
   button {
-    transition: .3s;
+    transition: 0.3s;
     padding: 10px 0;
     font-size: 1.3rem;
     margin: 30px;
