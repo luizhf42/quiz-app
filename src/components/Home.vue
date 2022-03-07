@@ -38,7 +38,7 @@
       </div>
     </div>
 
-    <p>Choose the number of questions</p>
+    <p>Choose the number of questions (from 10 to 50)</p>
     <input
       class="questions"
       type="number"
@@ -61,7 +61,7 @@ export default {
       categories: [],
       selectedCategoryId: 0,
       difficulty: "medium",
-      questions: 15,
+      questions: 10,
     };
   },
 
@@ -163,23 +163,6 @@ export default {
     padding: 2px 5px;
   }
 
-  button {
-    transition: 0.3s;
-    padding: 10px 0;
-    font-size: 1.3rem;
-    margin: 30px;
-    width: 200px;
-    background: App.$start-btn;
-    color: black;
-    border: 0;
-    box-shadow: 0 0 2px #cfcfff;
-    border-radius: 5px;
-    cursor: pointer;
-
-    &:hover {
-      background: App.$start-btn-hover;
-      transform: scale(1.05);
-    }
-  }
+  
 }
 </style>

@@ -12,9 +12,9 @@ $text: #fff;
 $difficulty-btn: #f1f1f1;
 $difficulty-hover: #8e96ae;
 $difficulty-checked: #2a78df;
-$start-btn: #2a78df;
-$start-btn-hover: #4c8cdf;
-
+$btn: #2a78df;
+$btn-hover: #4c8cdf;
+$timer: #f22;
 
 * {
   margin: 0;
@@ -24,7 +24,7 @@ $start-btn-hover: #4c8cdf;
 }
 
 #app {
-  height: 100vh;
+  min-height: 100vh;
   @include flex();
   color: $text;
   font-family: "Poppins", sans-serif;
@@ -32,6 +32,26 @@ $start-btn-hover: #4c8cdf;
 
   main {
     width: 100%;
+    margin: 10px 0;
     @include flex();
+  }
+
+  button {
+    transition: 0.3s;
+    padding: 10px 0;
+    font-size: 1.3rem;
+    margin: 30px auto;
+    width: 200px;
+    background: $btn;
+    color: black;
+    border: 0;
+    box-shadow: 0 0 2px #cfcfff;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:hover {
+      background: $btn-hover;
+      transform: scale(1.05);
+    }
   }
 }
