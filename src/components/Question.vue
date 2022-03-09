@@ -10,24 +10,41 @@
     </div>
 
     <div class="answers">
-      <div class="answer" @click="checkAnswer($event)" v-html="question1"></div>
-      <div class="answer" @click="checkAnswer($event)" v-html="question2"></div>
-      <div class="answer" @click="checkAnswer($event)" v-html="question3"></div>
-      <div class="answer" @click="checkAnswer($event)" v-html="question4"></div>
+      <div
+        class="answer"
+        @click="checkAnswer($event)"
+        :style="[roundEnded ? '' : { background: '#fff' }]"
+        v-html="question1"
+      ></div>
+      <div
+        class="answer"
+        @click="checkAnswer($event)"
+        :style="[roundEnded ? '' : { background: '#fff' }]"
+        v-html="question2"
+      ></div>
+      <div
+        class="answer"
+        @click="checkAnswer($event)"
+        :style="[roundEnded ? '' : { background: '#fff' }]"
+        v-html="question3"
+      ></div>
+      <div
+        class="answer"
+        @click="checkAnswer($event)"
+        :style="[roundEnded ? '' : { background: '#fff' }]"
+        v-html="question4"
+      ></div>
     </div>
 
-    <p
-      class="message"
+    <div
+      class="post-answer"
       :style="[roundEnded ? { display: 'block' } : { display: 'none' }]"
     >
-      {{ message }}
-    </p>
-    <button
-      :style="[roundEnded ? { display: 'block' } : { display: 'none' }]"
-      @click="goToNextQuestion"
-    >
-      Next question
-    </button>
+      <p class="message">
+        {{ message }}
+      </p>
+      <button @click="goToNextQuestion">Next question</button>
+    </div>
   </section>
 </template>
 
@@ -39,6 +56,8 @@ export default {
   },
   data() {
     return {
+      gameFinished: false,
+      correctAnswers: 0,
       secondsLeft: 0,
       index: 0,
       answers: [],
@@ -56,10 +75,13 @@ export default {
   mounted() {
     this.prepareQuestion();
   },
+
   methods: {
     prepareQuestion() {
       const questions = this.quizData.results;
       const index = this.index;
+
+      this.numberOfQuestions = questions.length;
 
       // Put all the answers in an array to shuffle them later
       this.answers.push(questions[index].correct_answer);
@@ -77,18 +99,20 @@ export default {
 
       this.countdown();
     },
+
     getRandomAnswer() {
       const randomNumber = Math.floor(Math.random() * this.answers.length);
       let answer = this.answers.splice(randomNumber, 1)[0];
 
       return answer;
     },
+
     countdown() {
       this.secondsLeft = 45;
-      const timer = setInterval(() => {
+      this.timer = setInterval(() => {
         if (!this.userAnswered) {
           if (this.secondsLeft > 0) this.secondsLeft--;
-          else if (this.secondsLeft <= 0 || this.roundEnded) stopTimer();
+          else if (this.secondsLeft <= 0 || this.roundEnded) this.stopTimer();
           if (this.secondsLeft.toString().length < 2)
             this.secondsLeft = `0${this.secondsLeft}`;
         }
@@ -97,9 +121,12 @@ export default {
           this.roundEnded = true;
         }
       }, 1000);
-
-      const stopTimer = () => clearInterval(timer);
     },
+
+    stopTimer() {
+      clearInterval(this.timer);
+    },
+
     checkAnswer(event) {
       if (!this.roundEnded) {
         this.userAnswered = true;
@@ -108,24 +135,39 @@ export default {
         this.isUserAnswerCorrect =
           event.target.innerText == this.correctAnswer ? true : false;
 
+        this.message = this.isUserAnswerCorrect
+          ? "Good job! 🐢"
+          : "Better luck next time.";
+
+        if (this.isUserAnswerCorrect) this.correctAnswers++;
+
         setTimeout(() => {
           event.target.style.background = this.isUserAnswerCorrect
             ? "#00ff00"
             : "#f00";
-
-          this.message = this.isUserAnswerCorrect
-            ? "Good job! 🐢"
-            : "Better luck next time.";
         }, 200);
       }
     },
+
     goToNextQuestion() {
-      this.index++;
-      this.roundEnded = false;
-      this.userAnswered = false;
-      this.isUserAnswerCorrect = undefined;
-      this.answers = [];
-      this.prepareQuestion();
+      this.checkIfItIsTheLastRound();
+
+      if (!this.gameFinished) {
+        this.index++;
+        this.roundEnded = false;
+        this.userAnswered = false;
+        this.isUserAnswerCorrect = undefined;
+        this.answers = [];
+        this.stopTimer();
+        this.prepareQuestion();
+      }
+    },
+
+    checkIfItIsTheLastRound() {
+      if (this.index == this.numberOfQuestions - 1) {
+        this.gameFinished = true;
+        this.$emit("endGame", this.correctAnswers);
+      }
     },
   },
 };
@@ -186,13 +228,17 @@ export default {
     }
   }
 
-  .message {
-    font-size: 1.3rem;
-    font-weight: 600;
-  }
+  .post-answer {
+    animation: fadeIn 1.5s;
 
-  button {
-    margin-top: 10px !important;
+    .message {
+      font-size: 1.3rem;
+      transition: 0.3s;
+    }
+
+    button {
+      margin-top: 10px !important;
+    }
   }
 }
 
@@ -203,6 +249,15 @@ export default {
       grid-template-columns: 1fr;
       grid-template-rows: repeat(4, 1fr);
     }
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }
 </style>

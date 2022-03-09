@@ -4,7 +4,11 @@
 
     <p>Select the category</p>
     <select @change="changeCategory">
-      <option :key="category.name" :id="category.id" v-for="category in categories">
+      <option
+        :key="category.name"
+        :id="category.id"
+        v-for="category in categories"
+      >
         {{ category.name }}
       </option>
     </select>
@@ -162,7 +166,5 @@ export default {
     width: 25%;
     padding: 2px 5px;
   }
-
-  
 }
 </style>

@@ -1,7 +1,12 @@
 <template>
   <main>
     <Home @startTheGame="startTheGame" v-if="!gameHasStarted" />
-    <Question v-if="gameHasStarted && quizData" :quizData="this.quizData" />
+    <Question
+      v-if="gameHasStarted && quizData && !gameFinished"
+      :quizData="this.quizData"
+      @endGame="endGame"
+    />
+    <div v-if="gameFinished">cabo</div>
   </main>
 </template>
 
@@ -20,6 +25,7 @@ export default {
   data() {
     return {
       gameHasStarted: false,
+      gameFinished: false,
       quizData: undefined,
     };
   },
@@ -28,6 +34,10 @@ export default {
       this.makeRequest(difficulty, categoryId, questions);
       this.gameHasStarted = true;
     },
+    endGame(correctAnswers) {
+      this.correctAnswers = correctAnswers;
+      this.gameFinished = true;
+    },
     async makeRequest(difficulty, categoryId, questions) {
       try {
         const { data } = await axios.get(
@@ -35,7 +45,7 @@ export default {
         );
 
         this.quizData = data;
-        console.log(data)
+        console.log(data);
       } catch (error) {
         console.error(error);
       }
