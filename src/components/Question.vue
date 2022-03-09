@@ -143,8 +143,8 @@ export default {
 
         setTimeout(() => {
           event.target.style.background = this.isUserAnswerCorrect
-            ? "#00ff00"
-            : "#f00";
+            ? "#00e900"
+            : "#ff4a4a";
         }, 200);
       }
     },
