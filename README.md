@@ -10,7 +10,7 @@ A quiz app using Vue.js and the OpenTDB API.
   - [Links](#links)
 - [Process](#process)
   - [Built with](#built-with)
-- [Credits] (#credits)
+- [Credits](#credits)
 - [Author](#author)
 
 ## Overview
