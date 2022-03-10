@@ -8,6 +8,7 @@
 }
 
 $bg: #11111c;
+$box-shadow: 0 0 2px #cfcfff;
 $text: #fff;
 $difficulty-btn: #f1f1f1;
 $difficulty-hover: #8e96ae;
@@ -15,6 +16,9 @@ $difficulty-checked: #2a78df;
 $btn: #2a78df;
 $btn-hover: #4c8cdf;
 $timer: #f22;
+$final-screen-heading: #2b7ce7;
+$correct: #00e900;
+$wrong: #ff4a4a;
 
 * {
   margin: 0;
@@ -45,7 +49,7 @@ $timer: #f22;
     background: $btn;
     color: black;
     border: 0;
-    box-shadow: 0 0 2px #cfcfff;
+    box-shadow: $box-shadow;
     border-radius: 5px;
     cursor: pointer;
 

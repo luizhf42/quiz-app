@@ -1,12 +1,17 @@
 <template>
   <main>
-    <Home @startTheGame="startTheGame" v-if="!gameHasStarted" />
+    <Home @startTheGame="startTheGame" v-if="showHome" />
     <Question
-      v-if="gameHasStarted && quizData && !gameFinished"
+      v-if="gameStarted && quizData && !gameFinished"
       :quizData="this.quizData"
       @endGame="endGame"
     />
-    <div v-if="gameFinished">cabo</div>
+    <Final
+      v-if="gameFinished"
+      :correctAnswers="correctAnswers"
+      :numberOfQuestions="numberOfQuestions"
+      @resetGame="resetGame"
+    />
   </main>
 </template>
 
@@ -15,28 +20,29 @@ import "./App.scss";
 import axios from "./services/axios";
 import Home from "./components/Home.vue";
 import Question from "./components/Question.vue";
+import Final from "./components/Final.vue";
 
 export default {
   name: "App",
   components: {
     Home,
     Question,
+    Final,
   },
   data() {
     return {
-      gameHasStarted: false,
+      showHome: true,
+      gameStarted: false,
       gameFinished: false,
       quizData: undefined,
+      numberOfQuestions: 0,
     };
   },
   methods: {
     startTheGame({ difficulty, categoryId, questions }) {
       this.makeRequest(difficulty, categoryId, questions);
-      this.gameHasStarted = true;
-    },
-    endGame(correctAnswers) {
-      this.correctAnswers = correctAnswers;
-      this.gameFinished = true;
+      this.showHome = false;
+      this.gameStarted = true;
     },
     async makeRequest(difficulty, categoryId, questions) {
       try {
@@ -49,6 +55,19 @@ export default {
       } catch (error) {
         console.error(error);
       }
+    },
+    endGame({ numberOfQuestions, correctAnswers }) {
+      this.numberOfQuestions = numberOfQuestions;
+
+      this.correctAnswers = correctAnswers;
+      this.gameFinished = true;
+    },
+    resetGame() {
+      this.showHome = true;
+      this.gameStarted = false;
+      this.gameFinished = false;
+      this.quizData = undefined;
+      this.numberOfQuestions = 0;
     },
   },
 };

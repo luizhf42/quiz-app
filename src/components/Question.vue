@@ -43,7 +43,12 @@
       <p class="message">
         {{ message }}
       </p>
-      <button @click="goToNextQuestion">Next question</button>
+      <button
+        @click="goToNextQuestion"
+        v-html="[
+          index == numberOfQuestions - 1 ? 'See results!' : 'Next question',
+        ]"
+      ></button>
     </div>
   </section>
 </template>
@@ -60,6 +65,7 @@ export default {
       correctAnswers: 0,
       secondsLeft: 0,
       index: 0,
+      numberOfQuestions: 0,
       answers: [],
       questionText: "",
       question1: "",
@@ -166,7 +172,10 @@ export default {
     checkIfItIsTheLastRound() {
       if (this.index == this.numberOfQuestions - 1) {
         this.gameFinished = true;
-        this.$emit("endGame", this.correctAnswers);
+        this.$emit("endGame", {
+          numberOfQuestions: this.numberOfQuestions,
+          correctAnswers: this.correctAnswers,
+        });
       }
     },
   },

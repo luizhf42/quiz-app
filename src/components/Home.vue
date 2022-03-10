@@ -145,7 +145,7 @@ export default {
         width: 0;
         &:checked ~ .button {
           background: App.$difficulty-checked;
-          box-shadow: 0 0 2px #cfcfff;
+          box-shadow: App.$box-shadow;
         }
       }
       .button {
